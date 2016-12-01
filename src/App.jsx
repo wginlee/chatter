@@ -8,6 +8,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Bob"},
+      onlineUsers: 1,
       messages: [] // messages coming from the server will be stored here as they arrive
     };
     this.socket = new WebSocket("ws://localhost:4000");
@@ -25,14 +26,19 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       let message = JSON.parse(event.data);
       console.log(message);
-      const messages = this.state.messages.concat(message);
-      this.setState({messages: messages});
+      if (message.type == "updateOnlineUsers"){
+        this.setState({onlineUsers: message.onlineUsers});
+      } else {
+        const messages = this.state.messages.concat(message);
+        this.setState({messages: messages});
+      }
 
     }
   }
 
-  changeUserName = (name) => {
-    this.setState({currentUser: {name: name}});
+  changeUserName = (message) => {
+    this.setState({currentUser: {name: message.username}});
+    this.socket.send(JSON.stringify(message));
   }
 
   sendChatMessage(message){
@@ -46,6 +52,7 @@ class App extends Component {
       <div className="wrapper">
         <nav>
           <h1>Chatty</h1>
+          <span className="users-online">{this.state.onlineUsers} users online</span>
         </nav>
         <MessageList messages={this.state.messages}/>
         <ChatBar currentUser={this.state.currentUser} createChatMessage={this.createChatMessage} sendChatMessage={this.sendChatMessage} changeUserName={this.changeUserName} />

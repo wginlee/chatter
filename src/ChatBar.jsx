@@ -24,8 +24,7 @@ class ChatBar extends Component {
   handleChatSubmit(event){
     if (event.key == 'Enter' || event.which === 13 || event.keyCode === 13){
       // this.props.createChatMessage(this.state.value);
-      //debugger;
-      let message = {username: this.props.currentUser.name, content: this.state.value}
+      let message = {username: this.props.currentUser.name, type: "postMessage", content: this.state.value}
       this.props.sendChatMessage(message);
 
       this.setState({value: ''});
@@ -33,8 +32,10 @@ class ChatBar extends Component {
   }
 
   handleNameSubmit(event){
-    if (event.key == 'Enter' || event.which === 13 || event.keyCode === 13 || event.key === 'Tab'){
-      this.props.changeUserName(this.state.name);
+    if (event.key == 'Enter' || event.which === 13 || event.keyCode === 13 ){
+      let newName = this.state.name;
+      let message = {username: newName, type: "postNotification", content: `${this.props.currentUser.name} changed their name to ${newName}` }
+      this.props.changeUserName(message);
 
     }
   }
