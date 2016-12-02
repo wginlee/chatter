@@ -14,7 +14,7 @@ class Message extends Component {
     } else if (this.props.type == "postMessage"){
       messageToRender =
         <div className="message">
-          <span className="username">{this.props.username}</span>
+          <span className="username" style={{color: this.props.userColor}}>{this.props.username}</span>
           <span className="content">{this.props.content}</span>
         </div>;
     } else {

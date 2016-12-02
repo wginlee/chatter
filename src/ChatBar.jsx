@@ -22,19 +22,25 @@ class ChatBar extends Component {
   }
 
   handleChatSubmit(event){
-    if (event.key == 'Enter' || event.which === 13 || event.keyCode === 13){
-      // this.props.createChatMessage(this.state.value);
-      let message = {username: this.props.currentUser.name, type: "postMessage", content: this.state.value}
-      this.props.sendChatMessage(message);
+    if (this.state.value.length < 1) return;
 
+    if (event.key == 'Enter' || event.which === 13 || event.keyCode === 13){
+      let message = {
+        username: nameOrAnon(this.props.currentUser.name),
+        type: "postMessage",
+        content: this.state.value
+      }
+
+      this.props.sendChatMessage(message);
       this.setState({value: ''});
     }
   }
 
   handleNameSubmit(event){
     if (event.key == 'Enter' || event.which === 13 || event.keyCode === 13 ){
-      let newName = this.state.name;
-      let message = {username: newName, type: "postNotification", content: `${this.props.currentUser.name} changed their name to ${newName}` }
+      let newName = nameOrAnon(this.state.name);
+      let oldName = nameOrAnon(this.props.currentUser.name);
+      let message = {username: this.state.name, type: "postNotification", content: `${oldName} changed their name to ${newName}` }
       this.props.changeUserName(message);
 
     }
@@ -51,3 +57,8 @@ class ChatBar extends Component {
   }
 }
 export default ChatBar;
+
+function nameOrAnon(name){
+  var anon = "Anonymous"
+  return name ? name : anon;
+}
