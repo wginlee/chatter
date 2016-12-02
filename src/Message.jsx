@@ -12,11 +12,24 @@ class Message extends Component {
           <span className="content">{this.props.content}</span>
         </div>;
     } else if (this.props.type == "postMessage"){
+
+      var imgRegex = /https?:\/\/.*\.(?:png|jpg)/ig;
+      var imgLinks = this.props.content.match(imgRegex);
+      var content = this.props.content.replace(imgRegex, "");
+
+      var images = (imgLinks)? <img src={imgLinks} className='images' /> : "";
+
+      console.log(content);
       messageToRender =
         <div className="message">
-          <span className="username" style={{color: this.props.userColor}}>{this.props.username}</span>
-          <span className="content">{this.props.content}</span>
-        </div>;
+          <div >
+            <span className="username" style={{color: this.props.userColor}}>{this.props.username}</span>
+          </div>
+          <div>
+            <div className="content">{content}</div>
+            <div className="content">{images}</div>
+          </div>
+        </div>
     } else {
       messageToRender = <div></div>;
     }
